@@ -6,4 +6,4 @@ from data.mit import MIT67
 from data.cifar10 import CIFAR10, CIFAR10val
 from data.cifar100 import CIFAR100, CIFAR100val
 from data.tinyImagenet import tinyImagenet_full, tinyImagenet_val
-from data.imagenet100 import imagenet, imagenet_val
+#from data.imagenet100 import imagenet, imagenet_val
