@@ -1,13 +1,16 @@
 #This script is borrowed from https://github.com/alinlab/cs-kd/blob/master/datasets.py
 import csv, torchvision, numpy as np, random, os
 from PIL import Image
+import sys
+
+sys.path.append('/content/Dynamic-Neural-Regeneration/DNR')
 
 from torch.utils.data import Sampler, Dataset, DataLoader, BatchSampler, SequentialSampler, RandomSampler, Subset
 from torchvision import transforms, datasets
 from collections import defaultdict
 import math
 import itertools
-import augmentations as aug
+from utils import augmentations as aug
 from data.Dataloader_analysis.cifar10_noisy import CIFAR10ImbalancedNoisy
 from data.Dataloader_analysis.cifar100_noisy import CIFAR100ImbalancedNoisy
 # from data.Dataloader_analysis.tiny_imgenet_noisy import TinyImageNet_noisy
