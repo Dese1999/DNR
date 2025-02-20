@@ -1,6 +1,6 @@
 import os
 import pathlib
-import constants
+from . import constants
 import random
 import os.path as osp
 from datetime import datetime
