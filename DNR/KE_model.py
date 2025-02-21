@@ -593,7 +593,6 @@ def ke_cls_eval_sparse(cfg, model, generation, ckpath, name):
     col_names = ['generation', 'last_tst_acc1', 'last_tst_acc5']
     arg_list = [generation, last_tst_acc1, last_tst_acc5]
     csv_file = os.path.join(ckpath, name)
-
     if not os.path.exists(csv_file):
         with open(csv_file, 'a') as ff:
             wr = csv.writer(ff, quoting=csv.QUOTE_ALL)
