@@ -32,7 +32,7 @@ def train(train_loader, model, criterion, optimizer, epoch, cfg, writer, mask=No
     top1 = AverageMeter("Acc@1", ":6.2f")
     top5 = AverageMeter("Acc@5", ":6.2f")
     progress = ProgressMeter(
-        train_loader.num_batches,
+        len(train_loader),
         [batch_time, data_time, losses, top1, top5],cfg,
         prefix=f"Epoch: [{epoch}]",
     )
@@ -41,7 +41,8 @@ def train(train_loader, model, criterion, optimizer, epoch, cfg, writer, mask=No
     model.train()
         
     batch_size = train_loader.batch_size
-    num_batches = train_loader.num_batches
+    num_batches = len(train_loader)
+    
     end = time.time()
 
     for i , data in enumerate(train_loader):
@@ -104,7 +105,7 @@ def train(train_loader, model, criterion, optimizer, epoch, cfg, writer, mask=No
             progress.write_to_tensorboard(writer, prefix="train", global_step=t)
 
 
-    return top1.avg, top5.avg, reg_decay
+    return top1.avg, top5.avg
 
 
 def validate(val_loader, model, criterion, args, writer, epoch):
@@ -113,7 +114,7 @@ def validate(val_loader, model, criterion, args, writer, epoch):
     top1 = AverageMeter("Acc@1", ":6.2f", write_val=True)
     top5 = AverageMeter("Acc@5", ":6.2f", write_val=False)
     progress = ProgressMeter(
-        val_loader.num_batches, [batch_time, losses, top1, top5],args, prefix="Test: "
+        len(val_loader), [batch_time, losses, top1, top5],args, prefix="Test: "
     )
 
     # switch to evaluate mode
@@ -144,7 +145,7 @@ def validate(val_loader, model, criterion, args, writer, epoch):
             if i % args.print_freq == 0:
                 progress.display(i)
 
-        progress.display(val_loader.num_batches)
+        progress.display(len(val_loader))
 
         if writer is not None:
             progress.write_to_tensorboard(writer, prefix="test", global_step=epoch)
