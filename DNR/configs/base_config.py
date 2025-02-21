@@ -29,7 +29,7 @@ class Config:
             "-a", "--arch", metavar="ARCH", default="Split_ResNet18", help="model architecture",
             choices=['Split_ResNet18', 'Split_ResNet18Norm', 'Split_ResNet34', 'Split_ResNet50', 'Split_ResNet50Norm',
                      'Split_ResNet101', 'Split_googlenet',
-                     'Split_densenet121', 'Split_densenet161', 'Split_densenet169', 'Split_densenet201', 'vgg11', 'vgg11_bn','resnet18']
+                     'Split_densenet121', 'Split_densenet161', 'Split_densenet169', 'Split_densenet201', 'vgg11', 'vgg11_bn','resnet18','Split_Xception']
         )
 
         parser.add_argument(
