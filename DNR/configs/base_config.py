@@ -29,10 +29,8 @@ class Config:
             "-a", "--arch", metavar="ARCH", default="Split_ResNet18", help="model architecture",
             choices=['Split_ResNet18', 'Split_ResNet18Norm', 'Split_ResNet34', 'Split_ResNet50', 'Split_ResNet50Norm',
                      'Split_ResNet101', 'Split_googlenet',
-                     'Split_densenet121', 'Split_densenet161', 'Split_densenet169', 'Split_densenet201', 'vgg11', 'vgg11_bn','resnet18',
-                     ]
+                     'Split_densenet121', 'Split_densenet161', 'Split_densenet169', 'Split_densenet201', 'vgg11', 'vgg11_bn','resnet18']
         )
-
 
         parser.add_argument(
             "--config_file", help="Config file to use (see configs dir)", default=None
@@ -40,12 +38,10 @@ class Config:
         parser.add_argument(
             "--log-dir", help="Where to save the runs. If None use ./runs", default=None
         )
-        # parser.add_argument(
-        #     "--ckpt-dir", help="Where to save the runs. If None use ./runs", default=None
-        # )
         parser.add_argument(
             '--evolve_mode', default='rand', choices=['rand', 'zero'],
-            help='How to initialize the reset-hypothesis.')
+            help='How to initialize the reset-hypothesis.'
+        )
 
         parser.add_argument(
             "-t",
@@ -126,16 +122,13 @@ class Config:
             help="print frequency",
         )
         parser.add_argument('--samples_per_class', default=1, type=int,
-                            help='Number of samples per class inside a mini-batch.'
-                            )
+                            help='Number of samples per class inside a mini-batch.')
         parser.add_argument('--alpha', default=32, type=float,
-                            help='Scaling Parameter setting'
-                            )
+                            help='Scaling Parameter setting')
        
-
         parser.add_argument('--warm', default=1, type=int,
-                            help='Warmup training epochs'
-                            )
+                            help='Warmup training epochs')
+
         parser.add_argument(
             "--resume",
             default="",
@@ -161,7 +154,6 @@ class Config:
 
         parser.add_argument(
             "--init_path",
-            # dest="init_path",
             default='/data/output-ai/',
             type=str,
             help="use pre-trained model",
@@ -182,7 +174,7 @@ class Config:
 
         # Learning Rate Policy Specific
         parser.add_argument(
-            "--lr_policy", default= "cosine_lr" , help="Policy for the learning rate."  #"cosine_lr"
+            "--lr_policy", default="cosine_lr", help="Policy for the learning rate."
         )
         parser.add_argument(
             "--multistep-lr-adjust", default=1, type=int, help="Interval to drop lr"
@@ -200,9 +192,9 @@ class Config:
         parser.add_argument(
             "--num_generations", default=11, type=int, help="Number of training generations"
         )
-        parser.add_argument('--lr-decay-step', default=10, type=int,help='Learning decay step setting')
-        parser.add_argument('--lr-decay-gamma', default=0.5, type=float,help='Learning decay gamma setting')
-        parser.add_argument('--gamma', default=0, type=float,help='fishermatrix update')
+        parser.add_argument('--lr-decay-step', default=10, type=int, help='Learning decay step setting')
+        parser.add_argument('--lr-decay-gamma', default=0.5, type=float, help='Learning decay gamma setting')
+        parser.add_argument('--gamma', default=0, type=float, help='fishermatrix update')
 
         parser.add_argument(
             "--split_rate",
@@ -264,8 +256,12 @@ class Config:
         parser.add_argument("--reverse_reset", action="store_true", default=False, help="reset layers BEFORE reset layer name") 
         parser.add_argument("--reverse_freeze", action="store_true", default=False, help="freeze reset layers") 
         parser.add_argument("--freeze_non_reset", action="store_true", default=False, help="freeze non-reset layers")
-
-       
+        parser.add_argument(
+            "--use-noisy-logit", 
+            action="store_true", 
+            default=False, 
+            help="Add noise to logits during training"
+        )
 
         parser.add_argument("--no_wandb", action="store_true", default=False, help="no wandb")
         parser.add_argument("--group_vars", type=str, nargs='+', default="", help="variables used for grouping in wandb")
@@ -294,20 +290,20 @@ class Config:
             type=str,
             default="-",
             choices=["llf"],
-            help="classifier for test.py",)
+            help="classifier for test.py",
+        )
         parser.add_argument(
             "--label_smoothing",
             type=float,
             help="Label smoothing to use, default 0.0",
-            default=0.1, #0.1
+            default=0.1,
         )
 
-     
         parser.add_argument(
             "--slow_lr_multiplier",
             type=float,
             help="0 means freeze important weights, otherwise slow learning rate",
-            default=0.0,  # 0.1
+            default=0.0,
         )
         parser.add_argument(
             "--trainer", type=str, default="default"
@@ -323,7 +319,6 @@ class Config:
             "--reset_important_weights", action="store_true", default=False, help="do not reset weight each generation"
         )
        
-
         parser.add_argument(
             "--weight_pruning", action="store_true", default=False, help="do not reset weight each generation"
         )
@@ -337,7 +332,7 @@ class Config:
         parser.add_argument(
             "--fix_seed", action="store_true", default=False, help="set a seed to fix reinit values"
         )
-        parser.add_argument("--reinit_type", type=str, default="lw",  help='Architecture of the backbone encoder network') #lw,ll,bw,alterbw
+        parser.add_argument("--reinit_type", type=str, default="lw", help='Architecture of the backbone encoder network')
 
         parser.add_argument("--deficit_epo", type=int, default=100,
                             help='deficit Number of epochs')
@@ -363,19 +358,12 @@ class Config:
         )
         parser.add_argument(
             "--use_val", action="store_true", default=False, help="diff aug"
-
         )
-
-  
 
         self.parser = parser
 
-    def parse(self,args):
+    def parse(self, args):
         self.cfg = self.parser.parse_args(args)
-
-        # Allow for use from notebook without config file
-        # self.read_config_file()
-        # self.read_cmd_args()
 
         if self.cfg.set == 'Flower102' or self.cfg.set == 'Flower102Pytorch':
             self.cfg.num_cls = 102
@@ -389,7 +377,6 @@ class Config:
         elif self.cfg.set in ['tinyImagenet_full', 'tinyImagenet_val']:
             self.cfg.num_cls = 200
             self.cfg.eval_tst = False
-
         elif self.cfg.set == 'Dog120':
             self.cfg.num_cls = 120
             self.cfg.eval_tst = False
@@ -415,9 +402,13 @@ class Config:
         self.cfg.bias_split_rate = self.cfg.split_rate
         
         self.cfg.group_name = self.cfg.name
-        self.cfg.name = 'SPLT_CLS_{}_{}_cskd{}_smth{}_k{}_G{}_e{}_ev{}_hReset{}_sm{}_{}_seed{}/'.format(self.cfg.set, self.cfg.arch, self.cfg.cs_kd, self.cfg.label_smoothing, self.cfg.split_rate, self.cfg.num_generations, self.cfg.epochs, self.cfg.evolve_mode, self.cfg.reset_hypothesis, self.cfg.split_mode, self.cfg.name, self.cfg.seed)
+        self.cfg.name = 'SPLT_CLS_{}_{}_cskd{}_smth{}_k{}_G{}_e{}_ev{}_hReset{}_sm{}_{}_seed{}/'.format(
+            self.cfg.set, self.cfg.arch, self.cfg.cs_kd, self.cfg.label_smoothing, self.cfg.split_rate, 
+            self.cfg.num_generations, self.cfg.epochs, self.cfg.evolve_mode, self.cfg.reset_hypothesis, 
+            self.cfg.split_mode, self.cfg.name, self.cfg.seed
+        )
 
-        self.cfg.exp_dir = osp.join(path_utils.get_checkpoint_dir() , self.cfg.name)
+        self.cfg.exp_dir = osp.join(path_utils.get_checkpoint_dir(), self.cfg.name)
 
         os_utils.touch_dir(self.cfg.exp_dir)
         log_file = os.path.join(self.cfg.exp_dir, self.cfg.log_file)
@@ -425,5 +416,3 @@ class Config:
         self.cfg.logger = logging.getLogger('KE')
 
         return self.cfg
-
-#
