@@ -263,11 +263,11 @@ def Split_Xception(cfg, progress=True):
     num_ftrs = model.get_classifier().in_features  
     num_classes = cfg.num_cls  
     model.fc = nn.Sequential(
-        nn.Linear(num_ftrs, 1024),  
+        nn.Linear(num_ftrs, 512),  
         nn.ReLU(),                 
-        nn.Linear(1024, 512),       
+        nn.Linear(512, 128),       
         nn.ReLU(),                
-        nn.Linear(512, num_classes) 
+        nn.Linear(128, num_classes) 
     )
 
     class XceptionWrapper(nn.Module):
