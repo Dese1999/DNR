@@ -78,7 +78,7 @@ class BasicBlockNorm(nn.Module):
         self.relu2 = builder.activation()
         self.downsample = downsample
         self.stride = stride
-        self.norm = nn.BatchNorm2d(int(planes * slim_factor))  # ساده‌سازی، می‌تونی LWNorm رو اگه داری جایگزین کنی
+        self.norm = nn.BatchNorm2d(int(planes * slim_factor))  
         self.LW_norm = LW_norm
 
     def forward(self, x):
@@ -248,12 +248,27 @@ class ResNet(nn.Module):
     def get_grads_list(self):
         return [pp.grad.view(-1) if pp.grad is not None else torch.zeros_like(pp).view(-1) for pp in self.parameters()]
 # models
+import torch
+import torch.nn as nn
+import timm
+
 def Split_Xception(cfg, progress=True):
     model = timm.create_model('xception', pretrained=(cfg.pretrained == 'imagenet'), num_classes=cfg.num_cls)
+    
     if cfg.pretrained == 'imagenet':
         print('Loading pretrained Xception directly from timm')
     else:
         print('Initializing Xception without pretrained weights')
+
+    num_ftrs = model.get_classifier().in_features  
+    num_classes = cfg.num_cls  
+    model.fc = nn.Sequential(
+        nn.Linear(num_ftrs, 1024),  
+        nn.ReLU(),                 
+        nn.Linear(1024, 512),       
+        nn.ReLU(),                
+        nn.Linear(512, num_classes) 
+    )
 
     class XceptionWrapper(nn.Module):
         def __init__(self, model, cfg):
@@ -263,10 +278,10 @@ def Split_Xception(cfg, progress=True):
             self.cfg = cfg
 
         def forward(self, x):
-            x = self.model.forward_features(x)
-            x = self.model.global_pool(x)
+            x = self.model.forward_features(x)  
+            x = self.model.global_pool(x)       
             if self.last_layer:
-                x = self.model.fc(x)
+                x = self.model.fc(x)            
             return x
 
         def get_params(self):
