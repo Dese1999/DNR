@@ -4,7 +4,7 @@ from models.split_vgg import vgg11, vgg11_bn
 import torch
 import torch.nn as nn
 import timm  # Import timm for Xception
-from models.builder import get_builder  # وارد کردن get_builder که توی ResNet استفاده می‌شه
+from models.builder import get_builder # Import get_builder which is used in ResNet
 try:
     from torch.hub import load_state_dict_from_url
 except ImportError:
