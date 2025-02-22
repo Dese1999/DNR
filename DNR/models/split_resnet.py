@@ -27,7 +27,7 @@ model_urls = {
     'resnet101': 'https://download.pytorch.org/models/resnet101-5d3b4d8f.pth',
 }
 
-# تعریف بلوک‌ها و کلاس ResNet
+# ResNet
 class BasicBlock(nn.Module):
     M = 2
     expansion = 1
