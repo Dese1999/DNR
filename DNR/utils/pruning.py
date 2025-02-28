@@ -146,56 +146,56 @@ def update_reg(mask, reg_decay,cfg):
     return reg_mask, reg_decay
             # update reg functions, two things:
             # (1) update reg of this layer (2) determine if it is time to stop update reg
-            if self.args.method == "RST":
-                finish_update_reg = self._greg_1(m, name)
-            else:
-                self.logprint("Wrong '--method' argument, please check.")
-                exit(1)
+            # if self.args.method == "RST":
+            #     finish_update_reg = self._greg_1(m, name)
+            # else:
+            #     self.logprint("Wrong '--method' argument, please check.")
+            #     exit(1)
             
-            # check prune state
-            if finish_update_reg:
-                # after 'update_reg' stage, keep the reg to stabilize weight magnitude
-                self.iter_update_reg_finished[name] = self.total_iter
-                self.logprint("==> [%d] Just finished 'update_reg'. Iter = %d" % (cnt_m, self.total_iter))
+            # # check prune state
+            # if finish_update_reg:
+            #     # after 'update_reg' stage, keep the reg to stabilize weight magnitude
+            #     self.iter_update_reg_finished[name] = self.total_iter
+            #     self.logprint("==> [%d] Just finished 'update_reg'. Iter = %d" % (cnt_m, self.total_iter))
             
-                # check if all layers finish 'update_reg'
-                self.prune_state = "stabilize_reg"
-                for n, mm in self.model.named_modules():
-                    if isinstance(mm, nn.Conv2d) or isinstance(mm, nn.Linear):
-                        if n not in self.iter_update_reg_finished:
-                            self.prune_state = "update_reg"
-                            break
-                if self.prune_state == "stabilize_reg":
-                    self.iter_stabilize_reg = self.total_iter
-                    self.logprint(
-                        "==> All layers just finished 'update_reg', go to 'stabilize_reg'. Iter = %d" % self.total_iter)
-                    self._save_model(mark='just_finished_update_reg')
+            #     # check if all layers finish 'update_reg'
+            #     self.prune_state = "stabilize_reg"
+            #     for n, mm in self.model.named_modules():
+            #         if isinstance(mm, nn.Conv2d) or isinstance(mm, nn.Linear):
+            #             if n not in self.iter_update_reg_finished:
+            #                 self.prune_state = "update_reg"
+            #                 break
+            #     if self.prune_state == "stabilize_reg":
+            #         self.iter_stabilize_reg = self.total_iter
+            #         self.logprint(
+            #             "==> All layers just finished 'update_reg', go to 'stabilize_reg'. Iter = %d" % self.total_iter)
+            #         self._save_model(mark='just_finished_update_reg')
             
             # after reg is updated, print to check
             if self.total_iter % self.args.print_interval == 0:
                 self.logprint("    reg_status: min = %.5f ave = %.5f max = %.5f" %
                               (self.reg[name].min(), self.reg[name].mean(), self.reg[name].max()))
 
-def greg_1( type, cfg):
+# def greg_1( type, cfg):
 
-    if  type== 'x':
-       self.reg[name][pruned] += cfg.reg_granularity_prune
+#     if  type== 'x':
+#        self.reg[name][pruned] += cfg.reg_granularity_prune
 
-    if type == 'x^2':
-        self.reg_[name][pruned] += cfg.reg_granularity_prune
-        self.reg[name][pruned] = self.reg_[name][pruned] ** 2
+#     if type == 'x^2':
+#         self.reg_[name][pruned] += cfg.reg_granularity_prune
+#         self.reg[name][pruned] = self.reg_[name][pruned] ** 2
 
-    if self.args.RST_schedule == 'x^3':
-        self.reg_[name][pruned] += cfg.reg_granularity_prune
-        self.reg[name][pruned] = self.reg_[name][pruned] ** 3
+#     if self.args.RST_schedule == 'x^3':
+#         self.reg_[name][pruned] += cfg.reg_granularity_prune
+#         self.reg[name][pruned] = self.reg_[name][pruned] ** 3
 
 
-    # when all layers are pushed hard enough, stop
-    if self.args.wg == 'weight':  # for weight, do not use the magnitude ratio condition, because 'hist_mag_ratio' is not updated, too costly
-        finish_update_reg = False
-    else:
-        finish_update_reg = True
-        for k in self.hist_mag_ratio:
-            if self.hist_mag_ratio[k] < self.args.mag_ratio_limit:
-                finish_update_reg = False
-    return finish_update_reg or self.reg[name].max() > self.args.reg_upper_limit
+    # # when all layers are pushed hard enough, stop
+    # if self.args.wg == 'weight':  # for weight, do not use the magnitude ratio condition, because 'hist_mag_ratio' is not updated, too costly
+    #     finish_update_reg = False
+    # else:
+    #     finish_update_reg = True
+    #     for k in self.hist_mag_ratio:
+    #         if self.hist_mag_ratio[k] < self.args.mag_ratio_limit:
+    #             finish_update_reg = False
+    # return finish_update_reg or self.reg[name].max() > self.args.reg_upper_limit
