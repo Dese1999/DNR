@@ -171,12 +171,12 @@ def update_reg(mask, reg_decay,cfg):
             #             "==> All layers just finished 'update_reg', go to 'stabilize_reg'. Iter = %d" % self.total_iter)
             #         self._save_model(mark='just_finished_update_reg')
             
-            # after reg is updated, print to check
-            if self.total_iter % self.args.print_interval == 0:
-                self.logprint("    reg_status: min = %.5f ave = %.5f max = %.5f" %
-                              (self.reg[name].min(), self.reg[name].mean(), self.reg[name].max()))
+#             # after reg is updated, print to check
+#             if self.total_iter % self.args.print_interval == 0:
+#                 self.logprint("    reg_status: min = %.5f ave = %.5f max = %.5f" %
+#                               (self.reg[name].min(), self.reg[name].mean(), self.reg[name].max()))
 
-# def greg_1( type, cfg):
+# # def greg_1( type, cfg):
 
 #     if  type== 'x':
 #        self.reg[name][pruned] += cfg.reg_granularity_prune
