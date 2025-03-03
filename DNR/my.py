@@ -245,5 +245,5 @@ if __name__ == '__main__':
     start_KE(cfg)
 
 
-$ python .\DNR\train_KE_cls.py  --weight_decay 0.0001 --arch Split_ResNet18 --no_wandb --set CIFAR10 --data /data/input-ai/datasets/cifar10 \
-           --epochs 200 --num_generations 11  --sparsity 0.8 --save_model --snip --reset_important_weights
+# $ python .\DNR\train_KE_cls.py  --weight_decay 0.0001 --arch Split_ResNet18 --no_wandb --set CIFAR10 --data /data/input-ai/datasets/cifar10 \
+#            --epochs 200 --num_generations 11  --sparsity 0.8 --save_model --snip --reset_important_weights
