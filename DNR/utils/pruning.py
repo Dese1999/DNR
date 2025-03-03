@@ -37,7 +37,7 @@ class Pruner:
             x, y = x.to(self.device), y.to(self.device)
             x = self.model.forward(x)
             L = torch.nn.CrossEntropyLoss()(x, y)
-            # تغییر اعمال‌شده: اضافه کردن allow_unused=True و مدیریت None
+            # Change applied: Add allow_unused=True and handle None
             grads = [g.abs() + (ag.abs() if ag is not None else torch.zeros_like(g)) 
                      for g, ag in zip(grads, torch.autograd.grad(L, self.weights, allow_unused=True))]
             
