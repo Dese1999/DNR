@@ -53,14 +53,14 @@ def train_dense(cfg, generation, model=None, fisher_mat=None):
             print('sparse model acc')
             tst_acc1, tst_acc5 = KE_model.ke_cls_eval_sparse(cfg, sparse_model, generation, ckpt_path, 'acc_pruned_model.csv')
             model = net_utils.reparameterize_non_sparse(cfg, model, fisher_mat)
-            sparse_mask = fisher_mat  # استفاده از fisher_mat به عنوان ماسک
-            torch.save(sparse_mask.state_dict(), os.path.join(base_pth, f"snip_mask_{generation}.pth"))
+            sparse_mask = fisher_mat  
+            torch.save(sparse_mask.state_dict(), os.path.join(cfg.exp_dir, f"snip_mask_{generation}.pth"))
             print('resetting non important params based on snip for next generation')
         else:
             ckpt_path, fisher_mat, model = KE_model.ke_cls_train_fish(cfg, model, generation, fisher_mat)
             sparse_mask = net_utils.extract_new_sparse_model(cfg, model, fisher_mat, generation)
-            torch.save(sparse_mask.state_dict(), os.path.join(base_pth, f"sparse_mask_{generation}.pth"))
-            np.save(os.path.join(base_pth, f"FIM_{generation}.npy"), fisher_mat.cpu().detach().numpy())
+            torch.save(sparse_mask.state_dict(), os.path.join(cfg.exp_dir, f"sparse_mask_{generation}.pth"))
+            np.save(os.path.join(cfg.exp_dir, f"FIM_{generation}.npy"), fisher_mat.cpu().detach().numpy())
             model = net_utils.reparameterize_non_sparse(cfg, model, sparse_mask)
         tst_acc1, tst_acc5 = KE_model.ke_cls_eval_sparse(cfg, model, generation, ckpt_path, 'acc_drop_reinit.csv')
 
