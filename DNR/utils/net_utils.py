@@ -318,13 +318,11 @@ def reparameterize_non_sparse(cfg, net, net_sparse_set):
             param.data = param.data * mask_param.data
             # if name not in ['conv1.weight', 'layer1.0.conv1.weight', 'layer1.0.conv2.weight', 'layer1.1.conv1.weight' ,'layer1.1.conv2.weight', 'layer2.0.conv1.weight', 'layer2.0.conv2.weight','layer2.1.conv1.weight','layer2.1.conv2.weight' ]:
             #if cfg.use_shrink_perturb:
-            #    param.data[mask_param.data==1]= param.data[mask_param.data==1].mul_(cfg.shrink).add_(re_init_param.data[mask_param.data==1], alpha=cfg.perturb)
+                #param.data[mask_param.data==1]= param.data[mask_param.data==1].mul_(cfg.shrink).add_(re_init_param.data[mask_param.data==1], alpha=cfg.perturb)
 
             re_init_param.data[mask_param.data == 1] = 0
             param.data = param.data + re_init_param.data
     return net
-
-
 
 def renint_usnig_method(mask, method='kaiming'):
     if method == 'kaiming':
