@@ -26,9 +26,9 @@ class Pruner:
             weight.data = weight * indicator
        
     
-    def snip(self, sparsity, mini_batches=1, silent=False): # prunes due to SNIP method
-        mini_batches = len(self.loader)/32
-        mini_batch=0
+    def snip(self, sparsity, mini_batches=1, silent=False):  # prunes due to SNIP method
+        mini_batches = len(self.loader) / 32
+        mini_batch = 0
         self.indicate()
         self.model.zero_grad()
         grads = [torch.zeros_like(w) for w in self.weights]
@@ -37,21 +37,26 @@ class Pruner:
             x, y = x.to(self.device), y.to(self.device)
             x = self.model.forward(x)
             L = torch.nn.CrossEntropyLoss()(x, y)
-            grads = [g.abs()+ag.abs() for g, ag in zip(grads, torch.autograd.grad(L, self.weights))]
-            mini_batch+=1
-            if mini_batch>=mini_batches: break
+            # تغییر اعمال‌شده: اضافه کردن allow_unused=True و مدیریت None
+            grads = [g.abs() + (ag.abs() if ag is not None else torch.zeros_like(g)) 
+                     for g, ag in zip(grads, torch.autograd.grad(L, self.weights, allow_unused=True))]
+            
+            mini_batch += 1
+            if mini_batch >= mini_batches: 
+                break
 
         with torch.no_grad():
             saliences = [(grad * weight).view(-1).abs().cpu() for weight, grad in zip(self.weights, grads)]
             saliences = torch.cat(saliences)
             
-            thresh = float( saliences.kthvalue( int(sparsity * saliences.shape[0] ) )[0] )
+            thresh = float(saliences.kthvalue(int(sparsity * saliences.shape[0]))[0])
             
             for j, layer in enumerate(self.indicators):
-                layer[ (grads[j] * self.weights[j]).abs() <= thresh ] = 0
+                layer[(grads[j] * self.weights[j]).abs() <= thresh] = 0
                 self.pruned[j] = int(torch.sum(layer == 0))
+        
         idx = 0
-        for (name, param) in (self.mask_.named_parameters()):
+        for name, param in self.mask_.named_parameters():
             if 'mask' not in name:
                 param.data = self.indicators[idx]
                 idx = idx + 1
@@ -60,8 +65,8 @@ class Pruner:
         self.model.zero_grad() 
         
         if not silent:
-            print("weights left: ", [self.indicators[i].numel()-pruned for i, pruned in enumerate(self.pruned)])
-            print("sparsities: ", [round(100*pruned/self.indicators[i].numel(), 2) for i, pruned in enumerate(self.pruned)])
+            print("weights left: ", [self.indicators[i].numel() - pruned for i, pruned in enumerate(self.pruned)])
+            print("sparsities: ", [round(100 * pruned / self.indicators[i].numel(), 2) for i, pruned in enumerate(self.pruned)])
 
         return self.mask_
         
