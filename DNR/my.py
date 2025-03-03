@@ -53,7 +53,7 @@ def train_dense(cfg, generation, model=None, fisher_mat=None):
             print('sparse model acc')
             tst_acc1, tst_acc5 = KE_model.ke_cls_eval_sparse(cfg, sparse_model, generation, ckpt_path, 'acc_pruned_model.csv')
             model = net_utils.reparameterize_non_sparse(cfg, model, fisher_mat)
-            sparse_mask = fisher_mat  
+            sparse_mask = fisher_mat  # استفاده از fisher_mat به عنوان ماسک
             torch.save(sparse_mask.state_dict(), os.path.join(cfg.exp_dir, f"snip_mask_{generation}.pth"))
             print('resetting non important params based on snip for next generation')
         else:
