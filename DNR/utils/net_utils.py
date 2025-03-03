@@ -317,8 +317,8 @@ def reparameterize_non_sparse(cfg, net, net_sparse_set):
             re_init_param = re_init_weights(param.data.shape, cfg.device)
             param.data = param.data * mask_param.data
             # if name not in ['conv1.weight', 'layer1.0.conv1.weight', 'layer1.0.conv2.weight', 'layer1.1.conv1.weight' ,'layer1.1.conv2.weight', 'layer2.0.conv1.weight', 'layer2.0.conv2.weight','layer2.1.conv1.weight','layer2.1.conv2.weight' ]:
-            if cfg.use_shrink_perturb:
-                param.data[mask_param.data==1]= param.data[mask_param.data==1].mul_(cfg.shrink).add_(re_init_param.data[mask_param.data==1], alpha=cfg.perturb)
+            #if cfg.use_shrink_perturb:
+            #    param.data[mask_param.data==1]= param.data[mask_param.data==1].mul_(cfg.shrink).add_(re_init_param.data[mask_param.data==1], alpha=cfg.perturb)
 
             re_init_param.data[mask_param.data == 1] = 0
             param.data = param.data + re_init_param.data
