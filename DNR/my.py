@@ -109,19 +109,17 @@ def start_KE(cfg):
     #     'layer4.0.conv1': []
     # }
   #############Xception################
+ # Updated weights_history based on the actual Xception structure from timm
     weights_history = {
-        'conv1': [],             # Initial conv layer
-        'block1.conv_dw': [],    # Depthwise conv in block1 (replaces sepconv1)
-        'block6.conv_dw': [],    # Depthwise conv in block6 (replaces sepconv1)
-        'block12.conv_dw': [],   # Depthwise conv in block12 (replaces sepconv1)
-        'fc.0': []               # First linear layer in the modified fc
+        'conv1': [],                  # Initial conv layer
+        'block1.rep.0.conv1': [],     # First depthwise conv in block1
+        'block6.rep.1.conv1': [],     # Depthwise conv in block6 (middle of the network)
+        'block12.rep.4.conv1': [],    # Depthwise conv in block12 (near output)
+        'fc.0': []                    # First linear layer in the modified fc
     }
     mask_history = {}
     # Optional: Print model structure to verify layer names
-    print("Model structure:")
-    for name, module in model.model.named_modules():
-        print(name)
-    
+  
     for gen in range(cfg.num_generations):
         cfg.start_epoch = 0
         model, fish_mat, sparse_mask = train_dense(cfg, gen, model=model, fisher_mat=fish_mat)
@@ -132,11 +130,12 @@ def start_KE(cfg):
         # weights_history['layer3.0.conv1'].append(model.layer3[0].conv1.weight.data.clone().cpu().numpy().flatten())
         # weights_history['layer4.0.conv1'].append(model.layer4[0].conv1.weight.data.clone().cpu().numpy().flatten())
 
-        ###Xception
+        
+        #  Xception layers
         weights_history['conv1'].append(model.model.conv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['block1.conv_dw'].append(model.model.block1.conv_dw.weight.data.clone().cpu().numpy().flatten())
-        weights_history['block6.conv_dw'].append(model.model.block6.conv_dw.weight.data.clone().cpu().numpy().flatten())
-        weights_history['block12.conv_dw'].append(model.model.block12.conv_dw.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block1.rep.0.conv1'].append(model.model.block1.rep[0].conv1.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block6.rep.1.conv1'].append(model.model.block6.rep[1].conv1.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block12.rep.4.conv1'].append(model.model.block12.rep[4].conv1.weight.data.clone().cpu().numpy().flatten())
         weights_history['fc.0'].append(model.model.fc[0].weight.data.clone().cpu().numpy().flatten())
 
         mask_history[gen] = {}
