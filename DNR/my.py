@@ -108,15 +108,15 @@ def start_KE(cfg):
     #     'layer3.0.conv1': [],
     #     'layer4.0.conv1': []
     # }
+  #############Xception################
     weights_history = {
-    'conv1': [],             # Initial conv layer
-    'block1.sepconv1': [],   # First separable conv in block1
-    'block6.sepconv1': [],   # Middle layer in block6
-    'block12.sepconv1': [],  # Near-output layer in block12
-    'fc.0': []               # First linear layer in the modified fc
-}
+        'conv1': [],             # Initial conv layer
+        'block1.conv_dw': [],    # Depthwise conv in block1 (replaces sepconv1)
+        'block6.conv_dw': [],    # Depthwise conv in block6 (replaces sepconv1)
+        'block12.conv_dw': [],   # Depthwise conv in block12 (replaces sepconv1)
+        'fc.0': []               # First linear layer in the modified fc
+    }
     mask_history = {}
-    
     for gen in range(cfg.num_generations):
         cfg.start_epoch = 0
         model, fish_mat, sparse_mask = train_dense(cfg, gen, model=model, fisher_mat=fish_mat)
@@ -129,9 +129,9 @@ def start_KE(cfg):
 
         ###Xception
         weights_history['conv1'].append(model.model.conv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['block1.sepconv1'].append(model.model.block1.sepconv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['block6.sepconv1'].append(model.model.block6.sepconv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['block12.sepconv1'].append(model.model.block12.sepconv1.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block1.conv_dw'].append(model.model.block1.conv_dw.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block6.conv_dw'].append(model.model.block6.conv_dw.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block12.conv_dw'].append(model.model.block12.conv_dw.weight.data.clone().cpu().numpy().flatten())
         weights_history['fc.0'].append(model.model.fc[0].weight.data.clone().cpu().numpy().flatten())
 
         mask_history[gen] = {}
