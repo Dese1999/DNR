@@ -117,6 +117,11 @@ def start_KE(cfg):
         'fc.0': []               # First linear layer in the modified fc
     }
     mask_history = {}
+    # Optional: Print model structure to verify layer names
+    print("Model structure:")
+    for name, module in model.model.named_modules():
+        print(name)
+    
     for gen in range(cfg.num_generations):
         cfg.start_epoch = 0
         model, fish_mat, sparse_mask = train_dense(cfg, gen, model=model, fisher_mat=fish_mat)
