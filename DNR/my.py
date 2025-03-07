@@ -101,25 +101,39 @@ def start_KE(cfg):
     model = None
     fish_mat = None
     
+    # weights_history = {
+    #     'conv1': [],
+    #     'layer1.0.conv1': [],
+    #     'layer2.0.conv1': [],
+    #     'layer3.0.conv1': [],
+    #     'layer4.0.conv1': []
+    # }
     weights_history = {
-        'conv1': [],
-        'layer1.0.conv1': [],
-        'layer2.0.conv1': [],
-        'layer3.0.conv1': [],
-        'layer4.0.conv1': []
-    }
+    'conv1': [],             # Initial conv layer
+    'block1.sepconv1': [],   # First separable conv in block1
+    'block6.sepconv1': [],   # Middle layer in block6
+    'block12.sepconv1': [],  # Near-output layer in block12
+    'fc.0': []               # First linear layer in the modified fc
+}
     mask_history = {}
     
     for gen in range(cfg.num_generations):
         cfg.start_epoch = 0
         model, fish_mat, sparse_mask = train_dense(cfg, gen, model=model, fisher_mat=fish_mat)
-        
-        weights_history['conv1'].append(model.conv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['layer1.0.conv1'].append(model.layer1[0].conv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['layer2.0.conv1'].append(model.layer2[0].conv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['layer3.0.conv1'].append(model.layer3[0].conv1.weight.data.clone().cpu().numpy().flatten())
-        weights_history['layer4.0.conv1'].append(model.layer4[0].conv1.weight.data.clone().cpu().numpy().flatten())
-        
+        #Resnet18
+        # weights_history['conv1'].append(model.conv1.weight.data.clone().cpu().numpy().flatten())
+        # weights_history['layer1.0.conv1'].append(model.layer1[0].conv1.weight.data.clone().cpu().numpy().flatten())
+        # weights_history['layer2.0.conv1'].append(model.layer2[0].conv1.weight.data.clone().cpu().numpy().flatten())
+        # weights_history['layer3.0.conv1'].append(model.layer3[0].conv1.weight.data.clone().cpu().numpy().flatten())
+        # weights_history['layer4.0.conv1'].append(model.layer4[0].conv1.weight.data.clone().cpu().numpy().flatten())
+
+        ###Xception
+        weights_history['conv1'].append(model.model.conv1.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block1.sepconv1'].append(model.model.block1.sepconv1.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block6.sepconv1'].append(model.model.block6.sepconv1.weight.data.clone().cpu().numpy().flatten())
+        weights_history['block12.sepconv1'].append(model.model.block12.sepconv1.weight.data.clone().cpu().numpy().flatten())
+        weights_history['fc.0'].append(model.model.fc[0].weight.data.clone().cpu().numpy().flatten())
+
         mask_history[gen] = {}
         if sparse_mask is not None:
             for name, param in sparse_mask.named_parameters():
