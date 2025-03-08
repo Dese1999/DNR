@@ -86,14 +86,15 @@ def train(train_loader, model, criterion, optimizer, epoch, cfg, writer, mask=No
         top5.update(acc5.item(), loss_batch_size)
 
         # compute gradient and do SGD step
+        
         optimizer.zero_grad()
         loss.backward()
-
-
-        # if epoch >50:
-      
+        if mask is not None:
+            for (name, param), mask_param in zip(model.named_parameters(), mask.parameters()):
+                if param.grad is not None and 'weight' in name and 'bn' not in name and 'downsample' not in name:
+                    param.grad = param.grad * mask_param  # Gradients are filtered with a mask
         optimizer.step()
-
+  
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
