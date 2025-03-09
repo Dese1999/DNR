@@ -25,8 +25,9 @@ def get_model(args):
 
     args.logger.info("=> Creating model '{}'".format(args.arch))
     # args.logger.info("=> Creating model_2 '{}'".format(args.arch_2))
+    
     if args.arch == 'resnet18':
-        model = models.__dict__[args.arch]
+        model = models.__dict__[args.arch]()
     else:
         model = models.__dict__[args.arch](args)
         if args.set =="CIFAR100" or args.set =='CIFAR10':
