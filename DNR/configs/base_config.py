@@ -272,7 +272,7 @@ class Config:
             "--supervised", action="store_true", default=False, help="supervised"
         )
         parser.add_argument(
-            "--last_layer", action="store_true", default=False, help="supervised"
+            "--last_layer", action="store_true", default=True, help="supervised"
         )
         parser.add_argument(
             "--snip", action="store_true", default=False, help="single shot pruning"
